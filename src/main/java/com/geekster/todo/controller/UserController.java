@@ -15,6 +15,7 @@ public class UserController {
         return status;
     }
 
+
     @GetMapping("/user")
     public String getUser(@Nullable @RequestParam String fistName,
                           @Nullable @RequestParam String userName) {
