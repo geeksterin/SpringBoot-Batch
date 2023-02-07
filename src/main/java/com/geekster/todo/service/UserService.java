@@ -1,40 +1,60 @@
 package com.geekster.todo.service;
 
 import com.geekster.todo.model.User;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+@Component
 public class UserService {
 
-    static List<User> userList = new ArrayList<>();
+    static List<Integer> userList = new ArrayList<>();
+
+    static Map<Integer, User> userDataMap = new HashMap<>();
 
     public String saveUser(User user) {
-
-        this.userList.add(user);
+        userDataMap.put(user.getUserId(), user);
         return "Saved user with name- " + user.getFirstName();
     }
 
-    public List<User> getUser(String fistName, String userName) {
-        List<User> requiredUser = new ArrayList<>();
-
-        if (null != fistName) {
-            for (User user : userList) {
-                if(user.getFirstName().equals(fistName)) {
-                    requiredUser.add(user);
-                    return requiredUser;
-                }
-            }
-        } else if (null != userName) {
-            for (User user : userList) {
-                if(user.getUsername().equals(userName)) {
-                    requiredUser.add(user);
-                    return requiredUser;
-                }
+    public List<User> getUser(Integer userId) {
+        List<User> requiredUsersList = new ArrayList<>();
+        if (null != userId) {
+            if(userDataMap.containsKey(userId)) {
+                requiredUsersList.add(userDataMap.get(userId));
             }
         } else {
-            return userList;
+            Set<Integer> keySet = userDataMap.keySet();
+            //ArrayList<User> listOfUsers = new ArrayList<User>(keySet);
         }
-        return requiredUser;
+        return requiredUsersList;
+    }
+
+    public String updateUser(User newUserData, Integer userId) {
+
+        if(userDataMap.containsKey(userId)) {
+            userDataMap.put(userId, newUserData);
+            return "User data updated";
+        } else {
+            return "User not found";
+        }
+    }
+
+
+
+    public String deleteUser(Integer userId) {
+
+        if(userDataMap.containsKey(userId)) {
+            userDataMap.remove(userId);
+            return "User deleted with user Id" + userId;
+        }
+        else {
+            return "User not found";
+        }
+    }
+
+    static public String testStatic(Integer num) {
+        userList.add(num);
+        return "hello";
     }
 }
