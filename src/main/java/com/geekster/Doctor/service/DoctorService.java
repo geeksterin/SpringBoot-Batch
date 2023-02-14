@@ -35,6 +35,7 @@ public class DoctorService {
     }
 
     public Doctor getDoctorById(String doctorId) {
+
         return repository.findById(Integer.valueOf(doctorId)).get();
     }
 }
