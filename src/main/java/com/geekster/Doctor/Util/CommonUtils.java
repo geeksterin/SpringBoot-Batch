@@ -1,6 +1,7 @@
 package com.geekster.Doctor.Util;
 
 import java.util.regex.*;
+
 public class CommonUtils {
 
     public static boolean validatePhoneNumber (String phoneNumber) {

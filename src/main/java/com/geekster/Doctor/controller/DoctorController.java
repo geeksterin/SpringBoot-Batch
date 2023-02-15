@@ -38,9 +38,7 @@ public class DoctorController {
                    Arrays.toString(answer), HttpStatus.BAD_REQUEST);
        }
 
-
     }
-
 
 
     @GetMapping(value = "/doctor")
@@ -86,7 +84,7 @@ public class DoctorController {
 
         if(json.has("experience")) {
             String exp = json.getString("experience");
-            doctor.setExperience("experience");
+            doctor.setExperience(exp);
         }
 
         return doctor;
