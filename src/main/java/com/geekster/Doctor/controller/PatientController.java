@@ -61,6 +61,10 @@ public class PatientController {
     public List<Patient> getPatients(@Nullable @RequestParam String doctorId,
                                      @Nullable @RequestParam String patientId) {
 
+        //both null- all patients
+        //doctorId null- get by patient Id
+        //patientId null- get all patients been treated by doctorId
+
     //ToDO: get all patients, Get a single patient by patient id, Get all patient who are been treated by doctorId
 
 
