@@ -5,13 +5,14 @@ import com.geekster.Doctor.model.Doctor;
 import com.geekster.Doctor.model.Patient;
 import com.geekster.Doctor.service.PatientService;
 import jakarta.annotation.Nullable;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.Doc;
 import java.sql.Timestamp;
-import java.util.List;
 
 @RestController
 public class PatientController {
@@ -49,7 +50,7 @@ public class PatientController {
 
         String doctorId = json.getString("doctorId");
         Doctor doctor = doctorRepository.findById(Integer.valueOf(doctorId)).get();
-        patient.setDoctorId(doctor);
+        patient.setDoctor(doctor);
 
         return patient;
 
@@ -58,8 +59,12 @@ public class PatientController {
 
 
     @GetMapping(value = "/patient")
-    public List<Patient> getPatients(@Nullable @RequestParam String doctorId,
-                                     @Nullable @RequestParam String patientId) {
+    public ResponseEntity getPatients(@Nullable @RequestParam String doctorId,
+                                      @Nullable @RequestParam String patientId) {
+
+        JSONArray patientDetails = service.getPatients();
+
+        return new ResponseEntity<>(patientDetails.toString(), HttpStatus.OK);
 
         //both null- all patients
         //doctorId null- get by patient Id

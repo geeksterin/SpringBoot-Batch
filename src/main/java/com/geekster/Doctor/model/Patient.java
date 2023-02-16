@@ -31,8 +31,8 @@ public class Patient {
     private Timestamp admitDate;
 
     @JoinColumn(name = "doctor_id")
-    @ManyToOne
-    private Doctor doctorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Doctor doctor;
 
     public Integer getPatientId() {
         return patientId;
@@ -90,11 +90,11 @@ public class Patient {
         this.admitDate = admitDate;
     }
 
-    public Doctor getDoctorId() {
-        return doctorId;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setDoctorId(Doctor doctorId) {
-        this.doctorId = doctorId;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 }
