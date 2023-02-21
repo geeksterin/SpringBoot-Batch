@@ -58,7 +58,7 @@ public class UserService {
 
         if(userRepository.findById(Integer.valueOf(userId)).isPresent()) {
             User user = userRepository.findById(Integer.valueOf(userId)).get();
-
+            newUser.setUserId(user.getUserId());
             userRepository.save(newUser);
         }
 

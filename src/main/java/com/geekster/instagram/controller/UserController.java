@@ -47,7 +47,7 @@ public class UserController {
 
     private User setUser(String userData) {
 
-        JSONObject jsonObject = new JSONObject(userData);
+        JSONObject jsonObject = new JSONObject();
         User user = new User();
 
         user.setAge(jsonObject.getInt("age"));
@@ -55,6 +55,7 @@ public class UserController {
         user.setFirstName(jsonObject.getString("firstName"));
         user.setLastName(jsonObject.getString("lastName"));
         user.setPhoneNumber(jsonObject.getString("phoneNumber"));
+
 
         return user;
 
