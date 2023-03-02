@@ -58,6 +58,56 @@ public class UserController {
 
     }
 
+    @PostMapping(value = "/login")
+    public ResponseEntity<String> login(@RequestBody String requestData) {
+        JSONObject requestJson = new JSONObject(requestData);
+
+        JSONObject isValidLogin = validateLogin(requestJson);
+
+        if (isValidLogin.isEmpty()) {
+            String username = requestJson.getString("username");
+            String password = requestJson.getString("password");
+            JSONObject responseObj = userService.login(username, password);
+            if(responseObj.has("errorMessage")) {
+                return new ResponseEntity<String>(responseObj.toString(), HttpStatus.BAD_REQUEST);
+            }else {
+                return new ResponseEntity<String>(responseObj.toString(), HttpStatus.OK);
+            }
+        } else {
+            return new ResponseEntity<String>(isValidLogin.toString(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private JSONObject validateLogin(JSONObject requestJson) {
+
+        JSONObject errorList = new JSONObject();
+
+        if(!requestJson.has("username")) {
+            errorList.put("username", "missing parameter");
+        }
+        if(!requestJson.has("password")) {
+            errorList.put("password", "missing parameter");
+        }
+        return errorList;
+    }
+
+    @PutMapping(value = "/update-user/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable String userId, @RequestBody String requestData) {
+        JSONObject isRequestValid = validateUserRequest(requestData);
+        Users user = null;
+
+        if(isRequestValid.isEmpty()) {
+            user = setUser(requestData);
+            JSONObject responseObj = userService.updateUser(user, userId);
+            if(responseObj.has("errorMessage")) {
+                return new ResponseEntity<String>(responseObj.toString(), HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<String>(isRequestValid.toString(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity("user updated", HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete-user/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable String userId){
 
@@ -65,33 +115,36 @@ public class UserController {
         return new ResponseEntity<>("Deleted", HttpStatus.NO_CONTENT);
     }
 
-
-
-
-
     private JSONObject validateUserRequest(String userData) {
         JSONObject userJson = new JSONObject(userData);
         JSONObject errorList = new JSONObject();
 
+
         if(userJson.has("username")) {
             String username = userJson.getString("username");
-            List<Users> userList = userRepository.findByUsername(username);
-            if(userList.size() > 0) {
-                errorList.put("username", "This username already exists");
-                return errorList;
+            if(!userJson.has("isUpdate")){
+                List<Users> userList = userRepository.findByUsername(username);
+                if(userList.size() > 0) {
+                    errorList.put("username", "This username already exists");
+                    return errorList;
+                }
             }
+
         } else {
             errorList.put("username", "Missing parameter");
         }
 
-        if(userJson.has("password")) {
-            String password = userJson.getString("password");
-            if(!CommonUtils.isValidPassword(password)) {
-                errorList.put("password", "Please enter valid password eg: Akshay@12390");
+        if(!userJson.has("isUpdate")) {
+            if(userJson.has("password") ) {
+                String password = userJson.getString("password");
+                if(!CommonUtils.isValidPassword(password)) {
+                    errorList.put("password", "Please enter valid password eg: Akshay@12390");
+                }
+            } else {
+                errorList.put("password", "Missing parameter");
             }
-        } else {
-            errorList.put("password", "Missing parameter");
         }
+
 
         if(userJson.has("firstName")) {
             String firstName = userJson.getString("firstName");
@@ -126,7 +179,10 @@ public class UserController {
         JSONObject json = new JSONObject(userData);
 
         user.setEmail(json.getString("email"));
-        user.setPassword(json.getString("password"));
+        if(!json.has("isUpdate")) {
+            user.setPassword(json.getString("password"));
+        }
+
         user.setFirstName(json.getString("firstName"));
         user.setUsername(json.getString("username"));
         user.setPhoneNumber(json.getString("phoneNumber"));
