@@ -2,7 +2,6 @@ package com.geekster.chatApplication.service;
 
 import com.geekster.chatApplication.dao.UserRepository;
 import com.geekster.chatApplication.model.Users;
-import org.apache.catalina.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +72,8 @@ public class UserService {
         return jsonObj;
     }
 
-    public void deleteUserByUserId(String userId) {
-       //userRepository.updateUserByUserId(Integer.valueOf(userId));
+    public void deleteUserByUserId(int userId) {
+       userRepository.deleteUserByUserId(userId);
     }
 
     public JSONObject updateUser(Users newUser, String userId) {

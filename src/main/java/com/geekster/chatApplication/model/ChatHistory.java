@@ -23,11 +23,11 @@ public class ChatHistory {
 
     @JoinColumn(name = "to_user_id")
     @ManyToOne
-    private Users to;
+    private Users sender;
 
     @JoinColumn(name = "from_user_id")
     @ManyToOne
-    private Users from;
+    private Users receiver;
 
     @Column(name = "message")
     private String message;
